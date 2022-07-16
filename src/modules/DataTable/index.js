@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Table, SearchInput } from '../../components';
+import { Table, SearchInput, Filter } from '../../components';
 import dynamic from 'next/dynamic';
 
 const DUMMYDATA = {
@@ -49,6 +49,7 @@ const DUMMYDATA = {
 const DataTable = () => {
   const [sorting, setSorting] = useState({ field: '', order: '' });
   const [keywords, setKeywords] = useState('');
+  const [filter, setFilter] = useState('all');
   const listHeaderTable = [
     { name: 'UserName', field: 'user_name' },
     { name: 'Name', field: 'name' },
@@ -58,14 +59,44 @@ const DataTable = () => {
   ];
   // console.log('sorting', sorting);
   const setKeywordsSearch = value => {
-    console.log('value', value);
+    console.log('value search', value);
     setKeywords(value);
+  };
+
+  const onClickSearch = () => {
+    console.log('onClickSearch', keywords);
+  };
+
+  const onSelectFilter = value => {
+    console.log('value Filter', value);
+    setFilter(value);
+  };
+
+  const onResetFilter = () => {
+    setFilter('all');
+    setKeywords('');
   };
 
   return (
     <>
       <div className="p-5 h-screen bg-gray-100">
-        <SearchInput setKeywords={e => setKeywordsSearch(e)}></SearchInput>
+        <div className="flex">
+          <div>
+            <h5 className="font-bold mb-2">Search</h5>
+            <SearchInput
+              setKeywords={e => setKeywordsSearch(e)}
+              onClickSearch={() => onClickSearch()}
+              valueSearch={keywords}
+            />
+          </div>
+          <div className="ml-3">
+            <h5 className="font-bold mb-2">Gender</h5>
+            <Filter onSelectFilter={e => onSelectFilter(e)} value={filter} />
+          </div>
+          <div className="self-end mb-3 ml-2 border px-3 bg-white">
+            <button onClick={() => onResetFilter()}>Reset Filter</button>
+          </div>
+        </div>
         <Table
           tableHead={listHeaderTable}
           tableBody={DUMMYDATA}

@@ -1,10 +1,21 @@
-const SearchInput = ({ setKeywords }) => {
+const SearchInput = ({ setKeywords, onClickSearch, valueSearch }) => {
+  const onSearch = value => {
+    setKeywords(value);
+  };
+
   return (
     <>
-      <h5 className="font-bold mb-2">Search</h5>
-      <div className="py-3  border-b flex">
-        <input onInput={e => setKeywords(e.target.value)} type="text" />
-        <button className="ml-3 border"> search</button>
+      <div className="py-3 flex">
+        <input
+          onInput={e => onSearch(e.target.value)}
+          type="text"
+          value={valueSearch}
+        />
+        <button
+          onClick={() => onClickSearch()}
+          className="bg-sky-500/100 w-24 ml-3 border text-white">
+          search
+        </button>
       </div>
     </>
   );
