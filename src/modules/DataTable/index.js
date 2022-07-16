@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Table from '../../components/Table';
+import { Table, SearchInput } from '../../components';
 import dynamic from 'next/dynamic';
 
 const DUMMYDATA = {
@@ -48,6 +48,7 @@ const DUMMYDATA = {
 };
 const DataTable = () => {
   const [sorting, setSorting] = useState({ field: '', order: '' });
+  const [keywords, setKeywords] = useState('');
   const listHeaderTable = [
     { name: 'UserName', field: 'user_name' },
     { name: 'Name', field: 'name' },
@@ -56,14 +57,22 @@ const DataTable = () => {
     { name: 'Register Date', field: 'register_date' },
   ];
   // console.log('sorting', sorting);
+  const setKeywordsSearch = value => {
+    console.log('value', value);
+    setKeywords(value);
+  };
+
   return (
-    <div className="p-5 h-screen bg-gray-100">
-      <Table
-        tableHead={listHeaderTable}
-        tableBody={DUMMYDATA}
-        onSorting={(field, order) => setSorting({ field, order })}
-      />
-    </div>
+    <>
+      <div className="p-5 h-screen bg-gray-100">
+        <SearchInput setKeywords={e => setKeywordsSearch(e)}></SearchInput>
+        <Table
+          tableHead={listHeaderTable}
+          tableBody={DUMMYDATA}
+          onSorting={(field, order) => setSorting({ field, order })}
+        />
+      </div>
+    </>
   );
 };
 

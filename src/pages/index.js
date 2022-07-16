@@ -2,51 +2,6 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import DataTable from '../modules/DataTable';
 
-const DUMMYDATA = {
-  data: [
-    {
-      id: 1,
-      userName: 'John Doe',
-      name: 'John Doe',
-      email: 'JohnDoe@email.com',
-      gender: 'male',
-      register_date: '04-01-2004:17.50',
-    },
-    {
-      id: 2,
-      userName: 'Sarah Doe',
-      name: 'Sarah Doe',
-      email: 'SarahDoe@email.com',
-      gender: 'female',
-      register_date: '04-01-2004:17.50',
-    },
-    {
-      id: 3,
-      userName: 'Lexi ',
-      name: 'Lexi Doe',
-      email: 'LexiDoe@email.com',
-      gender: 'female',
-      register_date: '04-01-2004:17.50',
-    },
-    {
-      id: 4,
-      userName: 'Thor',
-      name: 'Thor Doe',
-      email: 'ThorDoe@email.com',
-      gender: 'Male',
-      register_date: '04-01-2004:17.50',
-    },
-    {
-      id: 5,
-      userName: 'Luna ',
-      name: 'Luna Doe',
-      email: 'LunaDoe@email.com',
-      gender: 'female',
-      register_date: '04-01-2004:17.50',
-    },
-  ],
-};
-
 export default function Home() {
   const [isSSR, setIsSSR] = useState(true);
   useEffect(() => {
