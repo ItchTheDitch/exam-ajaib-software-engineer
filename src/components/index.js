@@ -1,3 +1,3 @@
-import DataTable from './DataTable';
+import Table from './Table';
 
-export { DataTable };
+export { Table };
