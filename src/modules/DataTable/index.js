@@ -48,6 +48,7 @@ const DUMMYDATA = {
     },
   ],
 };
+
 const DataTable = () => {
   const [user, setUser] = useState([]);
   const [sorting, setSorting] = useState({ field: '', order: '' });
@@ -61,45 +62,88 @@ const DataTable = () => {
     { name: 'Register Date', field: 'register_date' },
   ];
 
-  useEffect(() => {
-    const fetchRandomUser = async () => {
-      const defaultParam = '?page=1&pageSize=10&results=10';
-      const resp = await callGetRandomUser(defaultParam);
+  const fetchRandomUser = async (param = '') => {
+    const defaultParam = '?page=1&pageSize=10&results=10';
+    const resp = await callGetRandomUser(`${defaultParam}&${param}`);
 
-      return resp.results;
-    };
+    return resp.results;
+  };
+
+  useEffect(() => {
     fetchRandomUser();
   }, []);
 
   const userFromRedux = useSelector(state =>
     _.get(state.http, 'randomUser.response.data.results', [])
   );
+  const userData = mappingRandomUserData(userFromRedux);
 
   useEffect(() => {
-    const userData = mappingRandomUserData(userFromRedux);
     setUser(userData);
   }, [userFromRedux]);
 
   // console.log('sorting', sorting);
-  const setKeywordsSearch = value => {
+  const setKeywordsSearch = async value => {
     console.log('value search', value);
     setKeywords(value);
+    // _.debounce(calculateLayout, 150);
+    if (value === '') {
+      setUser(userData);
+    }
   };
 
-  const onClickSearch = () => {
+  const onClickSearch = async () => {
     console.log('onClickSearch', keywords);
+    // console.log('ruby', user);
+    // search input function
+
+    const resp = await callGetRandomUser(
+      `?page=1&pageSize=10&results=10&keywords=${keywords}${
+        filter === 'all' ? '' : `&gender=${filter}`
+      }`
+    );
+    const results =
+      user &&
+      user.data.filter(item => {
+        return item.name.toLowerCase().startsWith(keywords.toLowerCase());
+        // Use the toLowerCase() method to make it case-insensitive
+      });
+
+    setUser({ data: results });
+    return resp.results;
   };
 
-  const onSelectFilter = value => {
+  const onSelectFilter = async value => {
     console.log('value Filter', value);
     setFilter(value);
+
+    const resp = await fetchRandomUser(
+      `gender=${value}${keywords === '' ? '' : `&keywords=${keywords}`}`
+    );
+    return resp.results;
+    // const data = mappingRandomUserData(resp.results);
+    // console.log('data', data);
   };
 
-  const onResetFilter = () => {
+  const onSort = async (field, order) => {
+    console.log('field', field);
+    console.log('order', order);
+    setSorting({ field, order });
+    const resp = await fetchRandomUser(
+      `sortBy=${field}&order=${order}${
+        keywords === '' ? '' : `&keywords=${keywords}`
+      }`
+    );
+    return resp.results;
+  };
+
+  const onResetFilter = async () => {
     setFilter('all');
     setKeywords('');
     setSorting({ field: '', order: '' });
+    fetchRandomUser();
   };
+  console.log('user', user);
 
   return (
     <>
@@ -124,7 +168,7 @@ const DataTable = () => {
         <Table
           tableHead={listHeaderTable}
           tableBody={user}
-          onSorting={(field, order) => setSorting({ field, order })}
+          onSorting={(field, order) => onSort(field, order)}
         />
       </div>
     </>

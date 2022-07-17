@@ -3,7 +3,6 @@ const Filter = ({ onSelectFilter, value }) => {
     onSelectFilter(value);
   };
 
-  console.log('value', value);
   return (
     <div className="py-3 ml-2 w-24">
       <select

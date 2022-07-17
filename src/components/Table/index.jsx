@@ -5,12 +5,14 @@ import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 const RenderTableHeader = (header, onSorting) => {
   const [toggle, setToggle] = useState(false);
   const [sortingField, setSortingField] = useState('');
-  const [sortingOrder, setSortingOrder] = useState('asc');
+  const [sortingOrder, setSortingOrder] = useState('ascend');
 
   const onSortingChange = field => {
     // console.log('field', field);
     const order =
-      field === sortingField && sortingOrder === 'asc' ? 'desc' : 'asc';
+      field === sortingField && sortingOrder === 'ascend'
+        ? 'descend'
+        : 'ascend';
 
     // console.log('order', order);
     // console.log('sortingField', sortingField);
@@ -33,7 +35,7 @@ const RenderTableHeader = (header, onSorting) => {
           <>
             {sortingField && sortingField === item.field && (
               <FontAwesomeIcon
-                icon={sortingOrder === 'asc' ? faArrowDown : faArrowUp}
+                icon={sortingOrder === 'ascend' ? faArrowDown : faArrowUp}
                 className="ml-2"
                 size="xs"
               />
