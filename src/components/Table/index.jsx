@@ -2,24 +2,23 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 
-const RenderTableHeader = (header, onSorting) => {
-  const [toggle, setToggle] = useState(false);
-  const [sortingField, setSortingField] = useState('');
-  const [sortingOrder, setSortingOrder] = useState('ascend');
+const RenderTableHeader = (header, sortingField, sortingOrder, onSorting) => {
+  // const [sortingField, setSortingField] = useState('');
+  // const [sortingOrder, setSortingOrder] = useState('ascend');
 
   const onSortingChange = field => {
-    // console.log('field', field);
+    console.log('fielddddd', field);
     const order =
       field === sortingField && sortingOrder === 'ascend'
         ? 'descend'
         : 'ascend';
 
-    // console.log('order', order);
+    console.log('orderrrr', order);
     // console.log('sortingField', sortingField);
     // console.log('sortingOrder', sortingOrder);
 
-    setSortingField(field);
-    setSortingOrder(order);
+    // setSortingField(field);
+    // setSortingOrder(order);
     onSorting(field, order);
   };
   return header.map((item, index) => {
@@ -77,12 +76,25 @@ const renderTableBody = list => {
   );
 };
 
-export const Table = ({ tableHead, tableBody, onSorting }) => {
+export const Table = ({
+  tableHead,
+  tableBody,
+  sortingField,
+  sortingOrder,
+  onSorting,
+}) => {
   return (
     <div>
       <table className="w-full">
         <thead className="bg-gray-50 border-b-2 border-gray-200">
-          <>{RenderTableHeader(tableHead, onSorting)}</>
+          <>
+            {RenderTableHeader(
+              tableHead,
+              sortingField,
+              sortingOrder,
+              onSorting
+            )}
+          </>
         </thead>
         {renderTableBody(tableBody)}
       </table>

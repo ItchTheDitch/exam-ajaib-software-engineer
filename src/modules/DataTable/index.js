@@ -54,6 +54,8 @@ const DataTable = () => {
   const [sorting, setSorting] = useState({ field: '', order: '' });
   const [keywords, setKeywords] = useState('');
   const [filter, setFilter] = useState('all');
+  const [sortingField, setSortingField] = useState('');
+  const [sortingOrder, setSortingOrder] = useState('ascend');
   const listHeaderTable = [
     { name: 'UserName', field: 'user_name' },
     { name: 'Name', field: 'name' },
@@ -128,6 +130,8 @@ const DataTable = () => {
   const onSort = async (field, order) => {
     console.log('field', field);
     console.log('order', order);
+    setSortingField(field);
+    setSortingOrder(order);
     setSorting({ field, order });
     const resp = await fetchRandomUser(
       `sortBy=${field}&order=${order}${
@@ -140,10 +144,10 @@ const DataTable = () => {
   const onResetFilter = async () => {
     setFilter('all');
     setKeywords('');
-    setSorting({ field: '', order: '' });
+    onSort('', '');
     fetchRandomUser();
   };
-  console.log('user', user);
+  // console.log('user', user);
 
   return (
     <>
@@ -169,6 +173,8 @@ const DataTable = () => {
           tableHead={listHeaderTable}
           tableBody={user}
           onSorting={(field, order) => onSort(field, order)}
+          sortingField={sortingField}
+          sortingOrder={sortingOrder}
         />
       </div>
     </>
