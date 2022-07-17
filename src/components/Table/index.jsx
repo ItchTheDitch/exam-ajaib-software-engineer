@@ -53,7 +53,7 @@ const renderTableBody = list => {
     list.data &&
     list.data.map((item, index) => {
       return (
-        <tbody className="bg-white">
+        <tbody key={index} className="bg-white">
           <tr key={index}>
             <td className="p-3 text-sm font-semibold tracking-wide text-left">
               {item.userName}
