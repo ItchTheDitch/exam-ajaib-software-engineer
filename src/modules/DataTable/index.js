@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { Table, SearchInput, Filter } from '../../components';
-import dynamic from 'next/dynamic';
+import { callGetRandomUser } from './call';
+import { mappingRandomUserData } from './transformer';
 
 const DUMMYDATA = {
   data: [
@@ -47,6 +49,7 @@ const DUMMYDATA = {
   ],
 };
 const DataTable = () => {
+  const [user, setUser] = useState([]);
   const [sorting, setSorting] = useState({ field: '', order: '' });
   const [keywords, setKeywords] = useState('');
   const [filter, setFilter] = useState('all');
@@ -57,6 +60,26 @@ const DataTable = () => {
     { name: 'Gender', field: 'gender' },
     { name: 'Register Date', field: 'register_date' },
   ];
+
+  useEffect(() => {
+    const fetchRandomUser = async () => {
+      const defaultParam = '?page=1&pageSize=10&results=10';
+      const resp = await callGetRandomUser(defaultParam);
+
+      return resp.results;
+    };
+    fetchRandomUser();
+  }, []);
+
+  const userFromRedux = useSelector(state =>
+    _.get(state.http, 'randomUser.response.data.results', [])
+  );
+
+  useEffect(() => {
+    const userData = mappingRandomUserData(userFromRedux);
+    setUser(userData);
+  }, [userFromRedux]);
+
   // console.log('sorting', sorting);
   const setKeywordsSearch = value => {
     console.log('value search', value);
@@ -100,7 +123,7 @@ const DataTable = () => {
         </div>
         <Table
           tableHead={listHeaderTable}
-          tableBody={DUMMYDATA}
+          tableBody={user}
           onSorting={(field, order) => setSorting({ field, order })}
         />
       </div>

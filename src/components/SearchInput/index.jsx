@@ -15,7 +15,7 @@ const SearchInput = ({ setKeywords, onClickSearch, valueSearch }) => {
         />
         <button
           onClick={() => onClickSearch()}
-          className="bg-sky-500/100 w-10 border text-white flex justify-center items-center">
+          className="bg-sky-500/100 w-10  border text-white flex justify-center items-center">
           <div>
             <BsSearch />
           </div>
