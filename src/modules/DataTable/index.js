@@ -75,6 +75,7 @@ const DataTable = () => {
   const onResetFilter = () => {
     setFilter('all');
     setKeywords('');
+    setSorting({ field: '', order: '' });
   };
 
   return (

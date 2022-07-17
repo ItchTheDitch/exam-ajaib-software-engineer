@@ -1,3 +1,5 @@
+import { BsSearch } from 'react-icons/bs';
+
 const SearchInput = ({ setKeywords, onClickSearch, valueSearch }) => {
   const onSearch = value => {
     setKeywords(value);
@@ -13,8 +15,10 @@ const SearchInput = ({ setKeywords, onClickSearch, valueSearch }) => {
         />
         <button
           onClick={() => onClickSearch()}
-          className="bg-sky-500/100 w-24 ml-3 border text-white">
-          search
+          className="bg-sky-500/100 w-10 border text-white flex justify-center items-center">
+          <div>
+            <BsSearch />
+          </div>
         </button>
       </div>
     </>

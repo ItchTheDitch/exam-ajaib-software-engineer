@@ -35,6 +35,7 @@ const RenderTableHeader = (header, onSorting) => {
               <FontAwesomeIcon
                 icon={sortingOrder === 'asc' ? faArrowDown : faArrowUp}
                 className="ml-2"
+                size="xs"
               />
             )}
           </>
