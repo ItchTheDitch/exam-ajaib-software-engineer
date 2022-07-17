@@ -1,8 +1,9 @@
 {
   "extends": ["next/core-web-vitals", "plugin:react-hooks/recommended"],
   "parser": "@babel/eslint-parser",
+  "requireConfigFile": false,
   "parserOptions": {
-    "ecmaVersion": 2020
+    "ecmaVersion": 8
   },
   "env": {
     "browser": true,
