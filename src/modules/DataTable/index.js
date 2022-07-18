@@ -1,53 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import _ from 'lodash';
 import { useSelector } from 'react-redux';
-import { Table, SearchInput, Filter } from '../../components';
+import {
+  Table,
+  SearchInput,
+  Filter,
+  PaginationComponent,
+} from '../../components';
 import { callGetRandomUser } from './call';
 import { mappingRandomUserData } from './transformer';
-
-const DUMMYDATA = {
-  data: [
-    {
-      id: 1,
-      userName: 'John Doe',
-      name: 'John Doe',
-      email: 'JohnDoe@email.com',
-      gender: 'male',
-      register_date: '04-01-2004:17.50',
-    },
-    {
-      id: 2,
-      userName: 'Sarah Doe',
-      name: 'Sarah Doe',
-      email: 'SarahDoe@email.com',
-      gender: 'female',
-      register_date: '04-01-2004:17.50',
-    },
-    {
-      id: 3,
-      userName: 'Lexi ',
-      name: 'Lexi Doe',
-      email: 'LexiDoe@email.com',
-      gender: 'female',
-      register_date: '04-01-2004:17.50',
-    },
-    {
-      id: 4,
-      userName: 'Thor',
-      name: 'Thor Doe',
-      email: 'ThorDoe@email.com',
-      gender: 'Male',
-      register_date: '04-01-2004:17.50',
-    },
-    {
-      id: 5,
-      userName: 'Luna ',
-      name: 'Luna Doe',
-      email: 'LunaDoe@email.com',
-      gender: 'female',
-      register_date: '04-01-2004:17.50',
-    },
-  ],
-};
 
 const DataTable = () => {
   const [user, setUser] = useState([]);
@@ -56,6 +17,8 @@ const DataTable = () => {
   const [filter, setFilter] = useState('all');
   const [sortingField, setSortingField] = useState('');
   const [sortingOrder, setSortingOrder] = useState('ascend');
+  const [currentPage, setCurrentPage] = useState(1);
+
   const listHeaderTable = [
     { name: 'UserName', field: 'user_name' },
     { name: 'Name', field: 'name' },
@@ -64,16 +27,21 @@ const DataTable = () => {
     { name: 'Register Date', field: 'register_date' },
   ];
 
-  const fetchRandomUser = async (param = '') => {
-    const defaultParam = '?page=1&pageSize=10&results=10';
-    const resp = await callGetRandomUser(`${defaultParam}&${param}`);
+  const fetchRandomUser = useCallback(
+    async (param = '') => {
+      const defaultParam = `?${
+        currentPage === 1 ? 'page=1' : `page=${currentPage}`
+      }&pageSize=10&results=10`;
+      const resp = await callGetRandomUser(`${defaultParam}&${param}`);
 
-    return resp.results;
-  };
+      return resp.results;
+    },
+    [currentPage]
+  );
 
   useEffect(() => {
     fetchRandomUser();
-  }, []);
+  }, [fetchRandomUser]);
 
   const userFromRedux = useSelector(state =>
     _.get(state.http, 'randomUser.response.data.results', [])
@@ -84,25 +52,27 @@ const DataTable = () => {
     setUser(userData);
   }, [userFromRedux]);
 
+  const searchKeyword = _.debounce(async (keyword = '') => {
+    const resp = await fetchRandomUser(
+      `?keywords=${keyword}${filter === 'all' ? '' : `&gender=${filter}`}`
+    );
+    return resp;
+  }, 500);
+
   // console.log('sorting', sorting);
   const setKeywordsSearch = async value => {
     console.log('value search', value);
+
     setKeywords(value);
-    // _.debounce(calculateLayout, 150);
     if (value === '') {
       setUser(userData);
     }
+    searchKeyword(value);
   };
 
   const onClickSearch = async () => {
-    console.log('onClickSearch', keywords);
-    // console.log('ruby', user);
-    // search input function
-
-    const resp = await callGetRandomUser(
-      `?page=1&pageSize=10&results=10&keywords=${keywords}${
-        filter === 'all' ? '' : `&gender=${filter}`
-      }`
+    const resp = await fetchRandomUser(
+      `?keywords=${keywords}${filter === 'all' ? '' : `&gender=${filter}`}`
     );
     const results =
       user &&
@@ -147,6 +117,10 @@ const DataTable = () => {
     onSort('', '');
     fetchRandomUser();
   };
+
+  const onChangePagination = async page => {
+    setCurrentPage(page);
+  };
   // console.log('user', user);
 
   return (
@@ -176,6 +150,14 @@ const DataTable = () => {
           sortingField={sortingField}
           sortingOrder={sortingOrder}
         />
+        <div className="flex justify-end mt-3">
+          <PaginationComponent
+            total={100}
+            itemsPerPage={10}
+            currentPage={currentPage}
+            onPageChange={page => onChangePagination(page)}
+          />
+        </div>
       </div>
     </>
   );
