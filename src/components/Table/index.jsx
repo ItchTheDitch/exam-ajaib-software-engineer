@@ -3,22 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 
 const RenderTableHeader = (header, sortingField, sortingOrder, onSorting) => {
-  // const [sortingField, setSortingField] = useState('');
-  // const [sortingOrder, setSortingOrder] = useState('ascend');
-
   const onSortingChange = field => {
-    console.log('fielddddd', field);
     const order =
       field === sortingField && sortingOrder === 'ascend'
         ? 'descend'
         : 'ascend';
 
-    console.log('orderrrr', order);
-    // console.log('sortingField', sortingField);
-    // console.log('sortingOrder', sortingOrder);
-
-    // setSortingField(field);
-    // setSortingOrder(order);
     onSorting(field, order);
   };
   return header.map((item, index) => {

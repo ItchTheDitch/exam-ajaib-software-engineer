@@ -59,10 +59,7 @@ const DataTable = () => {
     return resp;
   }, 500);
 
-  // console.log('sorting', sorting);
   const setKeywordsSearch = async value => {
-    console.log('value search', value);
-
     setKeywords(value);
     if (value === '') {
       setUser(userData);
@@ -86,7 +83,6 @@ const DataTable = () => {
   };
 
   const onSelectFilter = async value => {
-    console.log('value Filter', value);
     setFilter(value);
 
     const resp = await fetchRandomUser(
@@ -94,12 +90,9 @@ const DataTable = () => {
     );
     return resp.results;
     // const data = mappingRandomUserData(resp.results);
-    // console.log('data', data);
   };
 
   const onSort = async (field, order) => {
-    console.log('field', field);
-    console.log('order', order);
     setSortingField(field);
     setSortingOrder(order);
     setSorting({ field, order });
@@ -121,7 +114,6 @@ const DataTable = () => {
   const onChangePagination = async page => {
     setCurrentPage(page);
   };
-  // console.log('user', user);
 
   return (
     <>
