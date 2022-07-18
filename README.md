@@ -23,3 +23,7 @@ yarn build
 ## Build Production in CICD
 
 merge with branch main (branch main already integrate witch vercel CICD)
+
+## Project Info
+
+I'm make redux dynamic function for call API (Reducer Request can be dynamicly change with rename the properties option in call.js)
